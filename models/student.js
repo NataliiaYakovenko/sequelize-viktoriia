@@ -12,14 +12,26 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+  /* Обмеження
+PRIMARY KEY - primaryKey
+UNIQUE - unique (constraint)
+CHECK - validate (validator)
+NOT NULL - allowNull (validator + constraint),
+FOREIGN KEY
+
+constraint - db
+validator - app
+*/
+
   }
   Student.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    birthday: DataTypes.DATE,
+    firstName: {type: DataTypes.STRING, allowNull: false, validate:{is:/^[A-Z][a-z]+$/}, len:[2, 64]},
+    lastName: {type: DataTypes.STRING, allowNull: false, validate:{is:/^[A-Z][a-z]+$/}, len:[2, 64]},
+    email: {type: DataTypes.STRING, unique: true, validate:{isEmail:true}},
+    birthday: {type: DataTypes.DATE, validate:{isBefore: new Date().toISOString()}},
     isMale: DataTypes.BOOLEAN,
-    activitiesCount: DataTypes.INTEGER
+    activitiesCount: {type: DataTypes.INTEGER, defaultValue: 0, validate:{min: 0}}
   }, {
     sequelize,
     modelName: 'Student',
